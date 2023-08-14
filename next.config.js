@@ -1,4 +1,10 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
 
-module.exports = nextConfig
+const nextConfig = {
+  images: {
+    domains: ["tailwindui.com"],
+    dangerouslyAllowSVG: true,
+  },
+};
+
+module.exports = nextConfig;
