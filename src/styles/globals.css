@@ -2,7 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  margin: 0;
+  padding: 0;
+}
 body {
   color: white;
   background: #111827;
 }
+
+/* .class {
+  @apply styles_tailwind
+} */
