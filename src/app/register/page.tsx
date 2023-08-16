@@ -1,8 +1,13 @@
+"use client";
 import { Input } from "@/components/input";
+
 import Image from "next/image";
 import Link from "next/link";
 
-const Login = () => {
+import { useFormatedData } from "./hook/formatData";
+
+const Register = () => {
+  const { handleChange, inputDate } = useFormatedData();
   return (
     <>
       <div className="flex h-screen flex-1 flex-col  justify-center px-6 py-12 lg:px-8 ">
@@ -17,17 +22,24 @@ const Login = () => {
             />
           </Link>
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-300">
-            Sign in to your account
+            Register your account
           </h2>
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" action="#" method="POST">
-            <div>
-              <Input label="email" type="email" />
-              <Input label="password" type="password" />
-            </div>
-
+          <form className="space-y-3" action="#" method="POST">
+            <Input label="firstname" type="text" />
+            <Input label="lastname" type="text" />
+            <Input label="email" type="email" />
+            <Input label="password" type="password" />
+            <Input label="repeat password" type="password" />
+            <Input
+              label="age"
+              type="text"
+              maxLength={10}
+              value={inputDate}
+              onChange={handleChange}
+            />
             <div>
               <button
                 type="submit"
@@ -39,12 +51,12 @@ const Login = () => {
           </form>
 
           <p className="mt-10 text-center text-sm text-gray-500">
-            Not have an account?{" "}
+            do you have an account?
             <a
-              href="/register"
+              href="/login"
               className="font-semibold leading-6 text-[#6366f1] hover:text-indigo-500"
             >
-              Create now!
+              Sig in now!
             </a>
           </p>
         </div>
@@ -53,4 +65,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
