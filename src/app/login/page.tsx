@@ -64,12 +64,12 @@ const Login = () => {
 
         <p className="mt-10 text-center text-sm text-gray-500">
           Not have an account?{" "}
-          <a
+          <Link
             href="/register"
             className="font-semibold leading-6 text-[#6366f1] hover:text-indigo-500"
           >
             Create now!
-          </a>
+          </Link>
         </p>
       </div>
     </div>

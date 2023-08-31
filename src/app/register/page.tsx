@@ -12,7 +12,7 @@ import * as z from "zod";
 import { Form } from "@/components/Form";
 import { Button } from "@/components/Button";
 import { generateSecurePassword } from "./functions/generatePassword";
-import { ChangeEvent, useState } from "react";
+
 import { getApiData } from "@/services/api";
 
 const schema = z.object({
@@ -52,8 +52,6 @@ const Register = () => {
       },
     });
     console.log(dataApi);
-
-    console.log("enviado");
   };
 
   const handleClick = () => {
@@ -123,12 +121,12 @@ const Register = () => {
 
           <p className="mt-10 text-center text-sm text-gray-500">
             do you have an account?
-            <a
+            <Link
               href="/login"
               className="font-semibold leading-6 text-[#6366f1] hover:text-indigo-500"
             >
               Sig in now!
-            </a>
+            </Link>
           </p>
         </div>
       </div>
