@@ -4,26 +4,44 @@ import { Form } from "@/components/Form";
 import { Input } from "@/components/Input/index";
 import { getApiData } from "@/services/api";
 
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+
 import Image from "next/image";
 import Link from "next/link";
-import { ChangeEvent, useState } from "react";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
+  const schema = z.object({
+    email: z.string().email({ message: "digite um email válido" }),
+    password: z
+      .string()
+      .min(8, { message: "sua senha precisa ter no minimo 8 digitos" }),
+  });
 
-  const onSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const data = await getApiData("login", {
+  type FormType = z.infer<typeof schema>;
+
+  const {
+    register,
+    handleSubmit,
+
+    formState: { errors },
+  } = useForm<FormType>({
+    resolver: zodResolver(schema),
+  });
+
+  const handleFormSubmit = async (data: FormType) => {
+    const dataApi = await getApiData("login", {
       method: "POST",
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({
+        email: data.email,
+        password: data.password,
+      }),
       headers: {
         "Content-Type": "application/json",
       },
     });
-    console.log(data);
-    setMessage(data.mensagem);
+    console.log(dataApi);
   };
 
   return (
@@ -44,21 +62,16 @@ const Login = () => {
       </div>
 
       <div className=" sm:mx-auto sm:w-full sm:max-w-sm">
-        <Form onSubmit={onSubmit}>
+        <Form onSubmit={handleSubmit(handleFormSubmit)}>
           <div>
-            <Input
-              label="email"
-              type="email"
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <Input
-              label="password"
-              type="password"
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            {" "}
+            <Input label="email" type="email" {...register("email")} />
+            {errors.email?.message && <span>{errors.email?.message}</span>}
+            <Input label="password" type="text" {...register("password")} />
+            {errors.password?.message && (
+              <span>{errors.password?.message}</span>
+            )}
           </div>
-          {message !== null ? <span>{message}</span> : ""}
-
           <Button type="submit">Sig In</Button>
         </Form>
 
