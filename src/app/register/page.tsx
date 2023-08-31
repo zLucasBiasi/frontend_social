@@ -13,6 +13,7 @@ import { Form } from "@/components/Form";
 import { Button } from "@/components/Button";
 import { generateSecurePassword } from "./functions/generatePassword";
 import { ChangeEvent, useState } from "react";
+import { getApiData } from "@/services/api";
 
 const schema = z.object({
   first_name: z.string().nonempty({ message: "nome requirido" }),
@@ -27,40 +28,39 @@ const schema = z.object({
 type FormType = z.infer<typeof schema>;
 
 const Register = () => {
-  const [passwordGenerated, setPasswordGenerated] = useState("");
-
-  const handleClick = () => {
-    const hash = generateSecurePassword();
-    setPasswordGenerated(hash);
-  };
-
-  // const onSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   const data = await getApiData("register", {
-  //     method: "POST",
-  //     body: JSON.stringify({ email, password, first_name, last_name, age }),
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //   });
-  //   console.log(data);
-  // };
-
-  // const { handleChange, inputDate } = useFormatedData();
-
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<FormType>({
     resolver: zodResolver(schema),
   });
 
-  console.log(errors);
+  const handleFormSubmit = async (data: FormType) => {
+    const dataApi = await getApiData("register", {
+      method: "POST",
+      body: JSON.stringify({
+        email: data.email,
+        password: data.password,
+        first_name: data.first_name,
+        last_name: data.last_name,
+        age: data.age,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    console.log(dataApi);
 
-  const handleFormSubmit = () => {
     console.log("enviado");
   };
+
+  const handleClick = () => {
+    const hash = generateSecurePassword();
+    setValue("password", hash);
+  };
+
   return (
     <>
       <div className="flex h-screen flex-1 flex-col  justify-c v  enter px-6 py-12 lg:px-8 ">
@@ -89,29 +89,25 @@ const Register = () => {
                 {...register("first_name")}
               />
               {errors.first_name?.message && (
-                <p>{errors.first_name?.message}</p>
+                <span>{errors.first_name?.message}</span>
               )}
               <Input label="lastname" type="text" {...register("last_name")} />
-              {errors.first_name?.message && <p>{errors.last_name?.message}</p>}
+              {errors.first_name?.message && (
+                <span>{errors.last_name?.message}</span>
+              )}
               <Input label="email" type="email" {...register("email")} />
-              {errors.email?.message && <p>{errors.email?.message}</p>}
+              {errors.email?.message && <span>{errors.email?.message}</span>}
               <Input
                 label="age"
                 type="date"
                 maxLength={10}
                 {...register("age")}
               />
-              {errors.age?.message && <p>{errors.age?.message}</p>}
-              <Input
-                label="password"
-                type="text"
-                value={passwordGenerated}
-                {...register("password")}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  setPasswordGenerated(e.target.value)
-                }
-              />
-              {errors.password?.message && <p>{errors.password?.message}</p>}
+              {errors.age?.message && <span>{errors.age?.message}</span>}
+              <Input label="password" type="text" {...register("password")} />
+              {errors.password?.message && (
+                <span>{errors.password?.message}</span>
+              )}
               <span
                 onClick={() => handleClick()}
                 className="text-[0.8rem] flex flex-row-reverse w-full cursor-pointer"
